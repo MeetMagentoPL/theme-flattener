@@ -8,5 +8,7 @@
             </argument>
         </arguments>
     </type>
-
+    
+    <preference for="\MeetMagentoPL\Falkowskifier\Model\ThemeFileCollectorInterface"
+                type="\MeetMagentoPL\Falkowskifier\Model\ThemeFileCollector"/>
 </config>
