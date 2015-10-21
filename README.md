@@ -20,23 +20,26 @@
 
 ## Commands
 
-```sh
-bin/magento dev:theme:flatten --area --dest
-
-# OPTIONS
-# --area :: frontend' (default) or admin
-# --dest :: where
-
-dev:theme:rebuild-flattened-theme
-
-dev:theme:rebuild-flattened-themes
-```
-
-### Examples
-
 **Note:** the `<workdir>` is hardcoded to `xx` and is created in the Magento root.
 
-#### Themes
+```
+bin/magento dev:theme:flatten (theme files)
+bin/magento dev:theme:flatten (module files)
+bin/magento dev:theme:rebuild-flattened-theme
+bin/magento dev:theme:rebuild-flattened-themes
+```
+
+### dev:theme:flatten (theme files)
+
+```sh
+bin/magento dev:theme:flatten -a="..." -d="..."
+
+# Options:
+# -a (alias: --area) -- 'frontend' (default) or 'adminhtml'
+# -d (alias: --dest) -- path to place files relative to Magento root. Default is <workdir>.
+```
+
+#### Example: defaults
 
 Flatten the `Magento_blank` theme into `<workdir>/magento-blank-flat`:
 
@@ -44,13 +47,15 @@ Flatten the `Magento_blank` theme into `<workdir>/magento-blank-flat`:
 bin/magento dev:theme:flatten Magento_blank
 ```
 
+#### Example: override destination
+
 Flatten the `Magento_luma` theme into `luma-work-dir`:
 
 ```sh
 bin/magento dev:theme:flatten Magento_luma --dest luma-work-dir
 ```
 
-#### Areas
+#### Example: override area
 
 Flatten the `Magento_backend` theme (from the admin area) into `<workdir>/magento-backend-flat`:
 
@@ -58,41 +63,54 @@ Flatten the `Magento_backend` theme (from the admin area) into `<workdir>/magent
 bin/magento dev:theme:flatten --area admin Magento_backend
 ```
 
+#### Example: override destination and area
+
 Flatten the theme `Magento_backend` (from the admin area) into a new working directory `admin-theme`:
 
 ```sh
 bin/magento dev:theme:flatten --area admin Magento_backend --dest admin-theme
 ```
 
-#### Module Files
+### dev:theme:flatten (module files)
 
-Flatten the view files from the modules under `app/code` into `<workdir>/modules-flat`:
+```sh
+bin/magento dev:theme:flatten modules -d="..."
+
+# Options:
+# -d (alias: --dest) :: path to place files relative to Magento root. Default is <workdir>.
+```
+
+#### Example: module files
+
+Flatten every module's view files from `app/code` into `<workdir>/modules-flat`:
 
 ```sh
 bin/magento dev:theme:flatten modules
 ```
 
-Flatten the view files from the modules under `app/code` into a custom working directory named `base`:
+Flatten every module's view files from `app/code` into a custom working directory named `base`:
 
 ```sh
-bin/magento dev:theme:flatten modules --dest base
+bin/magento dev:theme:flatten modules --dest=base
 ```
 
-#### Rebuild
+### dev:theme:rebuild-flattened-theme
+
+Look at the file `<workdir>/<flattened-theme-dir>/.flatten` and rerun the listed commands:
+
+```sh
+bin/magento dev:theme:rebuild-flattened-theme <path/to/directory>
+
+# Example
+# bin/magento dev:theme:rebuild-flattened-theme <workdir>/magento-blank-flat
+```
+
+### dev:theme:rebuild-flattened-themes
 
 Look at the files `<workdir>/*/.flatten` and rerun all the commands:
 
 ```sh
 bin/magento dev:theme:rebuild-flattened-themes
-```
-
-Look at the file `<workdir>/magento-blank-flat/.flatten` and rerun the command listed in there:
-
-```sh
-bin/magento dev:theme:rebuild-flattened-theme path/to/directory
-
-# Example
-# bin/magento dev:theme:rebuild-flattened-theme <workdir>/magento-blank-flat
 ```
 
 -----
