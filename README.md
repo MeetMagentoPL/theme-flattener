@@ -59,7 +59,7 @@ bin/magento dev:theme:flatten <package_theme> -a="..." -d="..."
 # -d (alias: --dest) path to place files relative to Magento root. Default is <workdir>.
 ```
 
-#### Example: defaults
+**Example: defaults**
 
 Flatten the `Magento_blank` theme into `<workdir>/magento-blank-flat`:
 
