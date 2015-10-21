@@ -5,6 +5,7 @@ namespace MeetMagentoPL\ThemeFlattener\Console\Command;
 
 use MeetMagentoPL\ThemeFlattener\Exception\FlattenThemeException;
 use MeetMagentoPL\ThemeFlattener\Model\FlattensThemes;
+use MeetMagentoPL\ThemeFlattener\Test\Unit\FileSystemThemeFixtureTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,6 +15,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class FlattenThemeCommandTest extends \PHPUnit_Framework_TestCase
 {
+    use FileSystemThemeFixtureTrait;
+    
     /**
      * @var FlattenThemeCommand
      */
@@ -34,8 +37,17 @@ class FlattenThemeCommandTest extends \PHPUnit_Framework_TestCase
      */
     private $mockFlattensThemes;
 
+    /**
+     * @var string
+     */
+    private $testDir;
+
     protected function setUp()
     {
+        $this->testDir = sys_get_temp_dir() . '/flatten-theme-command-test';
+        $this->ensureDirectoryExists($this->testDir);
+        chdir($this->testDir);
+        
         $this->mockFlattensThemes = $this->getMock(FlattensThemes::class, [], [], '', false);
         $this->command = new FlattenThemeCommand($this->mockFlattensThemes);
         $this->mockInput = $this->getMock(InputInterface::class);
@@ -148,5 +160,22 @@ class FlattenThemeCommandTest extends \PHPUnit_Framework_TestCase
         $this->mockFlattensThemes->expects($this->once())->method('flatten')
             ->with('frontend', 'Test_theme', 'xx/test-theme-flat');
         $this->command->run($this->mockInput, $this->mockOutput);
+    }
+
+    public function testItCreatesADotWithTheCommandDetails()
+    {
+        $this->mockInput->method('getArgument')->with('theme')->willReturn('Test_theme');
+        $destinationDir = 'destination-dir';
+        $this->mockInput->method('getOption')->willReturnMap([
+            ['dest', $destinationDir],
+            ['area', 'frontend']
+        ]);
+        $this->ensureDirectoryExists($destinationDir);
+        $this->command->run($this->mockInput, $this->mockOutput);
+        $this->assertFileExists($destinationDir . '/' . FlattenThemeCommand::DOTFILE);
+        $this->assertSame(
+            sprintf('bin/magento --dest="%s" --area="frontend" Test_theme', $destinationDir),
+            file_get_contents($destinationDir . '/' . FlattenThemeCommand::DOTFILE)
+        );
     }
 }

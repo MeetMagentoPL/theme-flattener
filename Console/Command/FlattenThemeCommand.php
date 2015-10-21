@@ -13,6 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class FlattenThemeCommand extends Command
 {
+    const DOTFILE = '.flatten-command';
     /**
      * @var FlattensThemes
      */
@@ -55,7 +56,8 @@ class FlattenThemeCommand extends Command
                 $this->getDefaultDestinationPath($theme);
 
             $this->flattensThemes->flatten($area, $theme, $destinationDir);
-            
+
+            $this->createDotFileWithCommandDetails($destinationDir, $area, $theme);
             $this->displayConfirmationMessage($output, $area, $theme, $destinationDir);
         } catch (FlattenThemeException $exception) {
             $output->writeln('<error>' . $exception->getMessage() . '</error>');
@@ -89,5 +91,18 @@ class FlattenThemeCommand extends Command
     {
         $message = sprintf('%s theme %s flattened into directory %s', ucfirst($area), $theme, $destinationDir);
         $output->writeln('<comment>' . $message . '</comment>');
+    }
+
+    /**
+     * @param string $destinationDir
+     * @param string $area
+     * @param string $theme
+     */
+    private function createDotFileWithCommandDetails($destinationDir, $area, $theme)
+    {
+        if (is_dir($destinationDir)) {
+            $content = sprintf('bin/magento --dest="%s" --area="%s" %s', $destinationDir, $area, $theme);
+            file_put_contents($destinationDir . '/' . self::DOTFILE, $content);
+        }
     }
 }
