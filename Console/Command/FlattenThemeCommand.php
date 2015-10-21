@@ -4,6 +4,7 @@
 namespace MeetMagentoPL\Falkowskifier\Console\Command;
 
 use MeetMagentoPL\Falkowskifier\Exception\FlattenThemeException;
+use MeetMagentoPL\Falkowskifier\FlattensThemes;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,14 +14,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 class FlattenThemeCommand extends Command
 {
     /**
-     * @var ThemeFlattener
+     * @var FlattensThemes
      */
-    private $themeFlattener;
+    private $flattensThemes;
 
-    public function __construct(ThemeFlattener $themeFlattener)
+    public function __construct(FlattensThemes $flattensThemes)
     {
         parent::__construct();
-        $this->themeFlattener = $themeFlattener;
+        $this->flattensThemes = $flattensThemes;
     }
 
 
@@ -48,7 +49,11 @@ class FlattenThemeCommand extends Command
     {
         try {
             list($area, $theme, $destinationDir) = $this->getInputArguments($input);
-            $this->themeFlattener->flatten($area, $theme, $destinationDir);
+            
+            $destinationDir ?
+                $this->flattensThemes->flatten($area, $theme, $destinationDir) :
+                $this->flattensThemes->flattenToDefaultDestination($area, $theme);
+            
             $this->displayConfirmationMessage($output, $area, $theme, $destinationDir);
         } catch (FlattenThemeException $exception) {
             $output->writeln('<error>' . $exception->getMessage() . '</error>');
