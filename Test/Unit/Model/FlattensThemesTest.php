@@ -128,13 +128,15 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
         $sourceThemeFiles = [
             'Vendor_Module/web/css/source/_partial.less',
             'Vendor_Module/web/css/source/nonpartial.less',
+            'Vendor_Module/web/css/source/sub/dir/_another-partial.less',
         ];
         $this->createSourceThemeFilesFixture($themeDirectory, $sourceThemeFiles);
 
         $destinationDir = 'target';
         $expectedFlattenedFiles = [
             $destinationDir . '/css/Vendor_Module_partial.less',
-            $destinationDir . '/css/Vendor_Module_nonpartial.less'
+            $destinationDir . '/css/Vendor_Module_nonpartial.less',
+            $destinationDir . '/css/Vendor_Module_sub_dir_another-partial.less',
         ];
 
         $this->flattensThemes->flatten('frontend', 'Test_theme', $destinationDir);
@@ -147,14 +149,16 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
         $themeDirectory = 'app/design/Test/theme';
         $sourceThemeFiles = [
             'web/css/source/theme.less',
-            'web/css/source/_partial.less'
+            'web/css/source/_partial.less',
+            'web/css/source/sub/dir/_another-partial.less',
         ];
         $this->createSourceThemeFilesFixture($themeDirectory, $sourceThemeFiles);
 
         $destinationDir = 'target';
         $expectedFlattenedFiles = [
             $destinationDir . '/css/theme.less',
-            $destinationDir . '/css/_partial.less'
+            $destinationDir . '/css/_partial.less',
+            $destinationDir . '/css/sub_dir_another-partial.less'
         ];
 
         $this->flattensThemes->flatten('frontend', 'Test_theme', $destinationDir);
