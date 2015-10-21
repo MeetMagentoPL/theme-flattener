@@ -12,6 +12,14 @@ interface ThemeFileCollectorInterface
      */
     public function getCssSourceFiles($area, $theme);
 
+
+    /**
+     * @param string $area
+     * @param string $theme
+     * @return string[]
+     */
+    public function getLayoutSourceFiles($area, $theme);
+    
     /**
      * @param string $area
      * @param string $theme

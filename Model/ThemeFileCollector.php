@@ -27,7 +27,13 @@ class ThemeFileCollector implements ThemeFileCollectorInterface
     public function getThemeDirectoryPath($area, $theme)
     {
         $componentName = $area . '/' . str_replace('_', '/', $theme);
-        return $this->themeRegistrar->getPath(ComponentRegistrar::THEME, $componentName);
+        $result = $this->themeRegistrar->getPath(ComponentRegistrar::THEME, $componentName);
+        if (!$result) {
+            $message = sprintf('Unable to locate the theme directory for area "%s" and theme "%s"', $area, $theme);
+            throw new UnableToLocateThemeDirectoryException($message);
+        }
+
+        return $result;
     }
 
     /**
@@ -38,13 +44,13 @@ class ThemeFileCollector implements ThemeFileCollectorInterface
     public function getCssSourceFiles($area, $theme)
     {
         $themeDirPath = $this->getThemeDirectoryPath($area, $theme);
-        if (!$themeDirPath) {
-            $message = sprintf('Unable to locate the theme directory for area "%s" and theme "%s"', $area, $theme);
-            throw new UnableToLocateThemeDirectoryException($message);
-        }
-
         $collectAllCssSourceFilesFromTheme = $this->collectAllCssSourceFilesFromTheme($themeDirPath);
         return $collectAllCssSourceFilesFromTheme;
+    }
+
+    private function getSourceFiles($area, $theme, $filesPath)
+    {
+        
     }
 
     /**
@@ -93,5 +99,17 @@ class ThemeFileCollector implements ThemeFileCollectorInterface
         return array_map('strval', array_filter(array_values(iterator_to_array($iterator)), function (\SplFileInfo $item) {
             return $item->isFile();
         }));
+    }
+
+    /**
+     * @param string $area
+     * @param string $theme
+     * @return string[]
+     */
+    public function getLayoutSourceFiles($area, $theme)
+    {
+        $themeDirPath = $this->getThemeDirectoryPath($area, $theme);
+        
+        return [];
     }
 }

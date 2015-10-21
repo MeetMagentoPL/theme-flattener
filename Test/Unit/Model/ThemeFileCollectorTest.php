@@ -52,7 +52,7 @@ class ThemeFileCollectorTest extends \PHPUnit_Framework_TestCase
             UnableToLocateThemeDirectoryException::class,
             'Unable to locate the theme directory for area "frontend" and theme "Test_theme"'
         );
-        $this->themeFileCollector->getCssSourceFiles('frontend', 'Test_theme');
+        $this->themeFileCollector->getThemeDirectoryPath('frontend', 'Test_theme');
     }
 
     public function testItReturnsAnEmptyArrayIfThereAreNoCssSourceFiles()
@@ -113,5 +113,34 @@ class ThemeFileCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->mockThemeRegistrar->method('getPath')->willReturn($this->testDir);
         $this->assertSame($this->testDir, $this->themeFileCollector->getThemeDirectoryPath('frontend', 'Test_theme'));
+    }
+
+    public function testItReturnsAnEmptyArrayIfThereIsNoLayoutFiles()
+    {
+        $this->mockThemeRegistrar->method('getPath')->willReturn($this->testDir);
+        $this->assertSame([], $this->themeFileCollector->getLayoutSourceFiles('frontend', 'Test_theme'));
+    }
+
+    public function testItIncludesThemeLayoutSourceFilesInTheReturnedArray()
+    {
+        $this->markTestIncomplete();
+        $expectedLayoutFiles = [
+            'theme-file-collector-test/Vendor_Module/layout/test.xml',
+            'theme-file-collector-test/Vendor_Module/layout/sub/dir/another.xml',
+        ];
+        $moduleLayoutFiles = [
+            $this->testDir . '/Vendor_Module/layout/test.xml',
+            $this->testDir . '/Vendor_Module/layout/sub/dir/another.xml',
+        ];
+        $this->ensureFilesExist($moduleLayoutFiles);
+
+        $this->mockThemeRegistrar->method('getPath')->willReturn($this->testDir);
+
+        $result = $this->themeFileCollector->getLayoutSourceFiles('frontend', 'Test_theme');
+
+        sort($expectedLayoutFiles);
+        sort($result);
+
+        $this->assertSame($expectedLayoutFiles, $result);
     }
 }
