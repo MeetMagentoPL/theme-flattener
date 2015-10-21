@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier;
+namespace MeetMagentoPL\Falkowskifier\Model;
 
 interface ThemeFileCollectorInterface
 {

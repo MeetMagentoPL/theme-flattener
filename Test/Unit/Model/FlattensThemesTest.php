@@ -1,9 +1,10 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier;
+namespace MeetMagentoPL\Falkowskifier\Model;
 
 use MeetMagentoPL\Falkowskifier\Exception\UnableToCreateDirectoryException;
+use MeetMagentoPL\Falkowskifier\Test\Unit\FileSystemThemeFixtureTrait;
 
 
 /**
@@ -11,6 +12,8 @@ use MeetMagentoPL\Falkowskifier\Exception\UnableToCreateDirectoryException;
  */
 class FlattensThemesTest extends \PHPUnit_Framework_TestCase
 {
+    use FileSystemThemeFixtureTrait;
+    
     /**
      * @var FlattensThemes
      */
@@ -29,48 +32,9 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
     private function setupTestDirectory()
     {
         $this->testDir = sys_get_temp_dir() . '/flattens-themes-test';
-        $this->createTestDirectory();
-        $this->ensureTestDirectoryIsWritable();
+        $this->ensureDirectoryExists($this->testDir);
+        $this->ensureDirectoryIsWritable($this->testDir);
         chdir($this->testDir);
-    }
-
-    private function createTestDirectory()
-    {
-        if (!is_dir($this->testDir)) {
-            mkdir($this->testDir, 0700, true);
-        }
-    }
-
-    private function ensureTestDirectoryIsWritable()
-    {
-        if (!is_writable($this->testDir)) {
-            chmod($this->testDir, 0700);
-        }
-    }
-
-    private function removeTestDirectory()
-    {
-        $testDirectoryBranch = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($this->testDir, \RecursiveDirectoryIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
-        );
-        foreach ($testDirectoryBranch as $item) {
-            $this->ensureFilesystemItemCanBeRemoved($item);
-            is_dir($item) ? rmdir($item) : unlink($item);
-        }
-    }
-
-    /**
-     * @param \SplFileInfo $item
-     */
-    private function ensureFilesystemItemCanBeRemoved($item)
-    {
-        if (!is_link($item) && !is_writable($item)) {
-            chmod($item, 0700);
-        }
-        if (!is_writable(dirname($item))) {
-            chmod(dirname($item), 0700);
-        }
     }
 
     /**
@@ -88,26 +52,6 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
         }, $filesInTheme);
 
         $this->mockThemeFileCollector->method('getCssSourceFiles')->willReturn($fullPathToFilesInTheme);
-    }
-
-    /**
-     *
-     * @param string $file
-     */
-    private function ensureFileExists($file)
-    {
-        $this->ensureDirectoryExists(dirname($file));
-        touch($file);
-    }
-
-    /**
-     * @param string $dir
-     */
-    private function ensureDirectoryExists($dir)
-    {
-        if (!file_exists($dir)) {
-            mkdir($dir, 0700, true);
-        }
     }
 
     /**
@@ -150,7 +94,7 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        $this->removeTestDirectory();
+        $this->removeDirectoryAndContents($this->testDir);
     }
 
     public function testItCreatesTheDestinationDirectoryIfItDoesNotExist()
@@ -184,13 +128,15 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
         $sourceThemeFiles = [
             'Vendor_Module/web/css/source/_partial.less',
             'Vendor_Module/web/css/source/nonpartial.less',
+            'Vendor_Module/web/css/source/sub/dir/_another-partial.less',
         ];
         $this->createSourceThemeFilesFixture($themeDirectory, $sourceThemeFiles);
 
         $destinationDir = 'target';
         $expectedFlattenedFiles = [
             $destinationDir . '/css/Vendor_Module_partial.less',
-            $destinationDir . '/css/Vendor_Module_nonpartial.less'
+            $destinationDir . '/css/Vendor_Module_nonpartial.less',
+            $destinationDir . '/css/Vendor_Module_sub_dir_another-partial.less',
         ];
 
         $this->flattensThemes->flatten('frontend', 'Test_theme', $destinationDir);
@@ -203,14 +149,16 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
         $themeDirectory = 'app/design/Test/theme';
         $sourceThemeFiles = [
             'web/css/source/theme.less',
-            'web/css/source/_partial.less'
+            'web/css/source/_partial.less',
+            'web/css/source/sub/dir/_another-partial.less',
         ];
         $this->createSourceThemeFilesFixture($themeDirectory, $sourceThemeFiles);
 
         $destinationDir = 'target';
         $expectedFlattenedFiles = [
             $destinationDir . '/css/theme.less',
-            $destinationDir . '/css/_partial.less'
+            $destinationDir . '/css/_partial.less',
+            $destinationDir . '/css/sub_dir_another-partial.less'
         ];
 
         $this->flattensThemes->flatten('frontend', 'Test_theme', $destinationDir);

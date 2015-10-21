@@ -1,10 +1,11 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier;
+namespace MeetMagentoPL\Falkowskifier\Model;
 
 
 use MeetMagentoPL\Falkowskifier\Exception\UnableToCreateDirectoryException;
+use MeetMagentoPL\Falkowskifier\Model\ThemeFileCollectorInterface;
 use MeetMagentoPL\Falkowskifier\Util\RelativeFileSystemPathBuilder;
 
 class FlattensThemes
@@ -111,7 +112,8 @@ class FlattensThemes
      */
     private function createLinkNameForModuleCssSourceFile($module, $subdirs, $file)
     {
-        return str_replace('__', '_', $module . '_' . $this->createLinkNameForThemeCssSourceFile($subdirs, $file));
+        $linkName = $module . '_' . $this->createLinkNameForThemeCssSourceFile($subdirs, $file);
+        return $this->removeDoubleUnderscores($linkName);
     }
 
     /**
@@ -121,8 +123,8 @@ class FlattensThemes
      */
     private function createLinkNameForThemeCssSourceFile($subdirs, $file)
     {
-        $subdirReplacement = strlen($subdirs) ? str_replace('/', '_', $subdirs) . '_' : '';
-        return $subdirReplacement . $file;
+        $subdirReplacement = strlen($subdirs) ? str_replace('/', '_', $subdirs) : '';
+        return $this->removeDoubleUnderscores($subdirReplacement . $file);
     }
 
     /**
@@ -159,5 +161,14 @@ class FlattensThemes
     private function getInThemePartOfCssSourceFile($cssSource)
     {
         return substr($cssSource, strlen($this->themeDir) + 1);
+    }
+
+    /**
+     * @param string $str
+     * @return string
+     */
+    private function removeDoubleUnderscores($str)
+    {
+        return str_replace('__', '_', $str);
     }
 }
