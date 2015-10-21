@@ -24,61 +24,75 @@
 bin/magento dev:theme:flatten --area --dest
 
 # OPTIONS
-# --area ::
-# --dest ::
+# --area :: frontend' (default) or admin
+# --dest :: where
 
 dev:theme:rebuild-flattened-theme
+
 dev:theme:rebuild-flattened-themes
 ```
 
 ### Examples
 
-Flatten the theme `Magento_blank` into a directory `xx/magento-blank-flat`:
+**Note:** the `<workdir>` is hardcoded to `xx` and is created in the Magento root.
 
-```
+#### Themes
+
+Flatten the `Magento_blank` theme into `<workdir>/magento-blank-flat`:
+
+```sh
 bin/magento dev:theme:flatten Magento_blank
 ```
 
-Flatten the theme `Magento_luma` into a directory `luma-work-dir`:
+Flatten the `Magento_luma` theme into `luma-work-dir`:
 
-```
+```sh
 bin/magento dev:theme:flatten Magento_luma --dest luma-work-dir
 ```
 
-Flatten the theme `Magento_backend` from the admin area into a directory `xx/magento-backend-flat`:
+#### Areas
 
-```
+Flatten the `Magento_backend` theme (from the admin area) into `<workdir>/magento-backend-flat`:
+
+```sh
 bin/magento dev:theme:flatten --area admin Magento_backend
 ```
 
-Flatten the theme `Magento_backend` from the admin area into a directory `admin-theme`:
+Flatten the theme `Magento_backend` (from the admin area) into a new working directory `admin-theme`:
 
-```
+```sh
 bin/magento dev:theme:flatten --area admin Magento_backend --dest admin-theme
 ```
 
-Flatten the view files from the modules under `app/code` into a directory `xx/modules-flat`:
+#### Module Files
 
-```
+Flatten the view files from the modules under `app/code` into `<workdir>/modules-flat`:
+
+```sh
 bin/magento dev:theme:flatten modules
 ```
 
-Flatten the view files from the modules under `app/code` into a directory `base` (using files):
+Flatten the view files from the modules under `app/code` into a custom working directory named `base`:
 
-```
+```sh
 bin/magento dev:theme:flatten modules --dest base
 ```
 
-Look at the file `xx/magento-blank-flat/.flatten` and rerun the command listed in there:
+#### Rebuild
 
-```
-bin/magento dev:theme:rebuild-flattened-theme xx/magento-blank-flat
-```
+Look at the files `<workdir>/*/.flatten` and rerun all the commands:
 
-Look at the files `xx/*/.flatten` and rerun all the commands:
-
-```
+```sh
 bin/magento dev:theme:rebuild-flattened-themes
+```
+
+Look at the file `<workdir>/magento-blank-flat/.flatten` and rerun the command listed in there:
+
+```sh
+bin/magento dev:theme:rebuild-flattened-theme path/to/directory
+
+# Example
+# bin/magento dev:theme:rebuild-flattened-theme <workdir>/magento-blank-flat
 ```
 
 -----
@@ -135,7 +149,7 @@ Is symlinked to:
 
 ### Creation of new files in flattened themes:
 
-Creating a file in the work dir will trigger the following process:
+Creating a file in the `<workdir>` will trigger the following process:
 
 1. Move the new file to the matching directory in the linked theme (creating missing directories if necessary).
 2. Create a symlink from the moved file in the theme to the work directory.
