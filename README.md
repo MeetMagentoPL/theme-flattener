@@ -14,13 +14,13 @@
 - Flatten "base" theme files from core modules in `app/code/*/*/view/web` into `<workdir>` (by copying files). This allows copying actual files (in your IDE) to your custom theme instead of copying symlinks.
 - Creating files in the `<workdir>` for custom themes will create those files in the reverse-symlinked location. It is based on a file naming convention and should create missing directories along the way.
 
-**Note:** The CSS compilation step is not involved or changed.
+**Note:** the `<workdir>` is hardcoded to `xx` and is created in the Magento root.
+
+**Note:** CSS compilation is not involved or changed because files are only modified via symlinks.
 
 -----
 
 ## Commands
-
-**Note:** the `<workdir>` is hardcoded to `xx` and is created in the Magento root.
 
 ```
 bin/magento dev:theme:flatten (theme files)
@@ -32,7 +32,7 @@ bin/magento dev:theme:rebuild-flattened-themes
 ### dev:theme:flatten (theme files)
 
 ```sh
-bin/magento dev:theme:flatten -a="..." -d="..."
+bin/magento dev:theme:flatten <package_theme> -a="..." -d="..."
 
 # Options:
 # -a (alias: --area) -- 'frontend' (default) or 'adminhtml'
@@ -52,23 +52,23 @@ bin/magento dev:theme:flatten Magento_blank
 Flatten the `Magento_luma` theme into `luma-work-dir`:
 
 ```sh
-bin/magento dev:theme:flatten Magento_luma --dest luma-work-dir
+bin/magento dev:theme:flatten Magento_luma --d=luma-work-dir
 ```
 
 #### Example: override area
 
-Flatten the `Magento_backend` theme (from the admin area) into `<workdir>/magento-backend-flat`:
+Flatten the `Magento_backend` theme (from the `adminhtml` area) into `<workdir>/magento-backend-flat`:
 
 ```sh
-bin/magento dev:theme:flatten --area admin Magento_backend
+bin/magento dev:theme:flatten Magento_backend -a=adminhtml
 ```
 
 #### Example: override destination and area
 
-Flatten the theme `Magento_backend` (from the admin area) into a new working directory `admin-theme`:
+Flatten the theme `Magento_backend` (from the `adminhtml` area) into a new working directory `admin-theme`:
 
 ```sh
-bin/magento dev:theme:flatten --area admin Magento_backend --dest admin-theme
+bin/magento dev:theme:flatten Magento_backend -a=adminhtml -dest=admin-theme
 ```
 
 ### dev:theme:flatten (module files)
@@ -88,10 +88,10 @@ Flatten every module's view files from `app/code` into `<workdir>/modules-flat`:
 bin/magento dev:theme:flatten modules
 ```
 
-Flatten every module's view files from `app/code` into a custom working directory named `base`:
+Flatten every module's view files from `app/code` into a custom working directory named `xyz-working-dir`:
 
 ```sh
-bin/magento dev:theme:flatten modules --dest=base
+bin/magento dev:theme:flatten modules -d=xyz-working-dir
 ```
 
 ### dev:theme:rebuild-flattened-theme
@@ -117,34 +117,22 @@ bin/magento dev:theme:rebuild-flattened-themes
 
 ## Examples
 
-**Note:** assume any Less/Sass file is meant to be a partial (with a leading `_`).
+Example output from using flattening.
 
-Theme flattening example:
+**Note:** assumes any Less/Sass file is a partial (with a leading `_`).
 
 ### Example 1
 
-The file:
-
 ```
-app/design/Magento/luma/Magento_Checkout/web/css/source/_module.less
-```
-
-Is symlinked to:
-
-```
-<workdir>/css/Magento_Checkout_module.less
+Given file: app/design/Magento/luma/Magento_Checkout/web/css/source/_module.less
+Symlink to: <workdir>/css/Magento_Checkout_module.less
 ```
 
 ### Example 2
 
 ```
-app/design/frontend/Magento/luma/Magento_Checkout/web/css/source/module/checkout/_shipping.less
-```
-
-Is symlinked to:
-
-```
-<workdir>/css/Magento_Checkout_module_checkout_shipping.less
+Given file: app/design/frontend/Magento/luma/Magento_Checkout/web/css/source/module/checkout/_shipping.less
+Symlink to: <workdir>/css/Magento_Checkout_module_checkout_shipping.less
 ```
 
 ### Example 3
@@ -152,13 +140,8 @@ Is symlinked to:
 Theme files that are not part of a module are symlinked into the `<workdir>` as is, for example:
 
 ```
-app/design/frontend/Magento/luma/web/css/source/_buttons.less
-```
-
-Is symlinked to:
-
-```
-<workdir>/css/_buttons.less
+Given file: app/design/frontend/Magento/luma/web/css/source/_buttons.less
+Symlink to: <workdir>/css/_buttons.less
 ```
 
 -----
