@@ -1,3 +1,7 @@
+# Theme Flattener for Magento 2
+
+The **theme flattener** adds Magento commands so frontend developers don't need to navigate Magento 2's deep directory tree to `view` files. It creates a working directory in the Magento root, then symlinks or copies specified themes and module files into subfolders. Developers can use this shallow tree for faster development and reference to the core.
+
 ## Contents
 
 1. [Features](#features)
@@ -14,7 +18,12 @@
 
 ## Features
 
+### Completed
+
 - [x] Flatten "custom" theme files into `<workdir>` using symlinks.
+
+### Todo
+
 - [ ] Flatten "base" theme files from core modules in `app/code/*/*/view/web` into `<workdir>` (by copying files). This allows copying actual files (in your IDE) to your custom theme instead of copying symlinks.
 - [ ] Creating files in the `<workdir>` for custom themes will create those files in the reverse-symlinked location. It is based on a file naming convention and should create missing directories along the way.
 
@@ -26,14 +35,21 @@
 
 ## Commands
 
-```
-bin/magento dev:theme:flatten (theme files)
-bin/magento dev:theme:flatten (module files)
+```sh
+# Flatten a theme
+bin/magento dev:theme:flatten <package_theme>
+
+# Flatten core modules
+bin/magento dev:theme:flatten modules
+
+# Rebuild a theme
 bin/magento dev:theme:rebuild-flattened-theme
+
+# Rebuild all themes
 bin/magento dev:theme:rebuild-flattened-themes
 ```
 
-### dev:theme:flatten (theme files)
+### dev:theme:flatten <package_theme>
 
 ```sh
 bin/magento dev:theme:flatten <package_theme> -a="..." -d="..."
@@ -51,7 +67,7 @@ Flatten the `Magento_blank` theme into `<workdir>/magento-blank-flat`:
 bin/magento dev:theme:flatten Magento_blank
 ```
 
-#### Example: override destination
+**Example: override destination**
 
 Flatten the `Magento_luma` theme into `luma-work-dir`:
 
@@ -59,7 +75,7 @@ Flatten the `Magento_luma` theme into `luma-work-dir`:
 bin/magento dev:theme:flatten Magento_luma --d=luma-work-dir
 ```
 
-#### Example: override area
+**Example: override area**
 
 Flatten the `Magento_backend` theme (from the `adminhtml` area) into `<workdir>/magento-backend-flat`:
 
@@ -67,7 +83,7 @@ Flatten the `Magento_backend` theme (from the `adminhtml` area) into `<workdir>/
 bin/magento dev:theme:flatten Magento_backend -a=adminhtml
 ```
 
-#### Example: override destination and area
+**Example: override destination and area**
 
 Flatten the theme `Magento_backend` (from the `adminhtml` area) into a new working directory `admin-theme`:
 
@@ -75,7 +91,7 @@ Flatten the theme `Magento_backend` (from the `adminhtml` area) into a new worki
 bin/magento dev:theme:flatten Magento_backend -a=adminhtml -dest=admin-theme
 ```
 
-### dev:theme:flatten (module files)
+### dev:theme:flatten modules
 
 ```sh
 bin/magento dev:theme:flatten modules -d="..."
@@ -84,7 +100,7 @@ bin/magento dev:theme:flatten modules -d="..."
 # -d (alias: --dest) :: path to place files relative to Magento root. Default is <workdir>.
 ```
 
-#### Example: default
+**Example: default**
 
 Flatten every module's view files from `app/code` into `<workdir>/modules-flat`:
 
@@ -92,7 +108,7 @@ Flatten every module's view files from `app/code` into `<workdir>/modules-flat`:
 bin/magento dev:theme:flatten modules
 ```
 
-#### Example: override area
+**Example: override area**
 
 Flatten every module's view files from `app/code` into a custom working directory named `xyz-working-dir`:
 
