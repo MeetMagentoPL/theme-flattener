@@ -37,6 +37,8 @@ class FlattensThemes
             $this->themeFileCollector->getThemeDirectoryPath($area, $theme)
         );
         $this->createDestinationWorkDir($destinationDir);
+        $this->removeOrphanedSymlinksFromDestinationWorkDir($destinationDir);
+        
         foreach ($this->getThemeCssSourceFiles($area, $theme) as $cssSourceFile) {
             $this->processModuleCssSourceFiles($destinationDir, $cssSourceFile);
             $this->processThemeCssSourceFiles($destinationDir, $cssSourceFile);
@@ -188,5 +190,20 @@ class FlattensThemes
             unlink($linkFilePath);
         }
         symlink($linkTarget, $linkFilePath);
+    }
+
+    /**
+     * @param string $destinationDir
+     */
+    private function removeOrphanedSymlinksFromDestinationWorkDir($destinationDir)
+    {
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($destinationDir, \RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+        foreach ($iterator as $file) {
+            if (is_link($file) && !file_exists($file)) {
+                unlink($file);
+            }
+        }
     }
 }

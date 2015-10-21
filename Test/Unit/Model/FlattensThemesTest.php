@@ -172,4 +172,15 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
 
         $this->flattensThemes->flatten('frontend', 'Test_theme', 'target');
     }
+
+    public function testItRemovesOrphanedSymlinksInTheDestinationDir()
+    {
+        $existingLink = 'target/css/theme.less';
+        $this->ensureDirectoryExists(dirname($existingLink));
+        symlink('somewhere/over/the/rainbow', $existingLink);
+        
+        $this->flattensThemes->flatten('frontend', 'Test_theme', 'target');
+        
+        $this->assertFalse(is_link($existingLink), 'The orphaned symlink was not removed');
+    }
 }
