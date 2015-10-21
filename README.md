@@ -2,7 +2,11 @@
 
 1. [Features](#features)
 1. [Commands](#commands)
-1. [Examples](#examples)
+  - [dev:theme:flatten (theme files)](#devthemeflatten-theme-files)
+  - [dev:theme:flatten (module files)](#devthemeflatten-module-files)
+  - [dev:theme:rebuild-flattened-theme](#devthemerebuild-flattened-theme)
+  - [dev:theme:rebuild-flattened-themes](#devthemerebuild-flattened-themes)
+1. [Example Output](#example-output)
 1. [Expected Behavior](#expected-behavior)
 1. [Contributors](#contributors)
 
@@ -10,11 +14,11 @@
 
 ## Features
 
-- Flatten "custom" theme files into `<workdir>` using symlinks.
-- Flatten "base" theme files from core modules in `app/code/*/*/view/web` into `<workdir>` (by copying files). This allows copying actual files (in your IDE) to your custom theme instead of copying symlinks.
-- Creating files in the `<workdir>` for custom themes will create those files in the reverse-symlinked location. It is based on a file naming convention and should create missing directories along the way.
+- [x] Flatten "custom" theme files into `<workdir>` using symlinks.
+- [ ] Flatten "base" theme files from core modules in `app/code/*/*/view/web` into `<workdir>` (by copying files). This allows copying actual files (in your IDE) to your custom theme instead of copying symlinks.
+- [ ] Creating files in the `<workdir>` for custom themes will create those files in the reverse-symlinked location. It is based on a file naming convention and should create missing directories along the way.
 
-**Note:** the `<workdir>` is hardcoded to `xx` and is created in the Magento root.
+**Note:** the `<workdir>` is hardcoded to `xx` and is created in the Magento root. All the flattened files will live here.
 
 **Note:** CSS compilation is not involved or changed because files are only modified via symlinks.
 
@@ -35,8 +39,8 @@ bin/magento dev:theme:rebuild-flattened-themes
 bin/magento dev:theme:flatten <package_theme> -a="..." -d="..."
 
 # Options:
-# -a (alias: --area) -- 'frontend' (default) or 'adminhtml'
-# -d (alias: --dest) -- path to place files relative to Magento root. Default is <workdir>.
+# -a (alias: --area) 'frontend' (default) or 'adminhtml'
+# -d (alias: --dest) path to place files relative to Magento root. Default is <workdir>.
 ```
 
 #### Example: defaults
@@ -80,13 +84,15 @@ bin/magento dev:theme:flatten modules -d="..."
 # -d (alias: --dest) :: path to place files relative to Magento root. Default is <workdir>.
 ```
 
-#### Example: module files
+#### Example: default
 
 Flatten every module's view files from `app/code` into `<workdir>/modules-flat`:
 
 ```sh
 bin/magento dev:theme:flatten modules
 ```
+
+#### Example: override area
 
 Flatten every module's view files from `app/code` into a custom working directory named `xyz-working-dir`:
 
@@ -115,7 +121,7 @@ bin/magento dev:theme:rebuild-flattened-themes
 
 -----
 
-## Examples
+## Example Output
 
 Example output from using flattening.
 
