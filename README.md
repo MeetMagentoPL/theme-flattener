@@ -43,10 +43,10 @@ bin/magento dev:theme:flatten <package_theme>
 bin/magento dev:theme:flatten modules
 
 # Rebuild a theme
-bin/magento dev:theme:rebuild-flattened-theme
+bin/magento dev:theme:rebuild-flattened-theme <workdir>/<flattened-theme-dir>
 
 # Rebuild all themes
-bin/magento dev:theme:rebuild-flattened-themes
+bin/magento dev:theme:rebuild-flattened-theme <workdir>
 ```
 
 ### dev:theme:flatten &lt;package_theme&gt;
@@ -116,23 +116,23 @@ Flatten every module's view files from `app/code` into a custom working director
 bin/magento dev:theme:flatten modules -d=xyz-working-dir
 ```
 
-### dev:theme:rebuild-flattened-theme
+### dev:theme:rebuild-flattened-theme <workdir>/<flattened-theme-dir>
 
 Look at the file `<workdir>/<flattened-theme-dir>/.flatten` and rerun the listed commands:
 
 ```sh
-bin/magento dev:theme:rebuild-flattened-theme <path/to/directory>
+bin/magento dev:theme:rebuild-flattened-theme <workdir>/<flattened-theme-dir>
 
 # Example
 # bin/magento dev:theme:rebuild-flattened-theme <workdir>/magento-blank-flat
 ```
 
-### dev:theme:rebuild-flattened-themes
+### dev:theme:rebuild-flattened-theme <workdir>
 
 Look at the files `<workdir>/*/.flatten` and rerun all the commands:
 
 ```sh
-bin/magento dev:theme:rebuild-flattened-themes
+bin/magento dev:theme:rebuild-flattened-themes <workdir>
 ```
 
 -----
