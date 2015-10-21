@@ -43,7 +43,7 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
      */
     private function createSourceThemeFilesFixture($themeDirectory, array $filesInTheme)
     {
-        $this->mockThemeFileCollector->method('getThemeDirectoryPath')->willReturn($themeDirectory);
+        $this->mockThemeFileCollector->method('getThemeDirectoryPath')->willReturn(getcwd() . '/' . $themeDirectory);
 
         $fullPathToFilesInTheme = array_map(function ($fileInTheme) use ($themeDirectory) {
             $file = $themeDirectory . '/' . $fileInTheme;

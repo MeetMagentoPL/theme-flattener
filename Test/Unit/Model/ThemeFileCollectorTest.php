@@ -28,6 +28,7 @@ class ThemeFileCollectorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        chdir(sys_get_temp_dir());
         $this->testDir = sys_get_temp_dir() . '/theme-file-collector-test';
         $this->ensureDirectoryExists($this->testDir);
         
@@ -62,6 +63,11 @@ class ThemeFileCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function testItIncludesThemeCssSourceFilesInTheReturnedArray()
     {
+        $expectedCssFiles = [
+            'theme-file-collector-test/web/css/source/_partial.less',
+            'theme-file-collector-test/web/css/source/nonpartial.less',
+            'theme-file-collector-test/web/css/source/foo/_another-partial.less',
+        ];
         $themeCssFiles = [
             $this->testDir . '/web/css/source/_partial.less',
             $this->testDir . '/web/css/source/nonpartial.less',
@@ -73,14 +79,19 @@ class ThemeFileCollectorTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->themeFileCollector->getCssSourceFiles('frontend', 'Test_theme');
         
-        sort($themeCssFiles);
+        sort($expectedCssFiles);
         sort($result);
         
-        $this->assertSame($themeCssFiles, $result);
+        $this->assertSame($expectedCssFiles, $result);
     }
 
     public function testItIncludesModulesSourceFilesInTheReturnedArray()
     {
+        $expectedCssFiles = [
+            'theme-file-collector-test/Vendor_Module/web/css/source/_partial.less',
+            'theme-file-collector-test/Vendor_Module/web/css/source/nonpartial.less',
+            'theme-file-collector-test/Vendor_Module/web/css/source/foo/_another-partial.less',
+        ];
         $moduleCssFiles = [
             $this->testDir . '/Vendor_Module/web/css/source/_partial.less',
             $this->testDir . '/Vendor_Module/web/css/source/nonpartial.less',
@@ -92,10 +103,10 @@ class ThemeFileCollectorTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->themeFileCollector->getCssSourceFiles('frontend', 'Test_theme');
         
-        sort($moduleCssFiles);
+        sort($expectedCssFiles);
         sort($result);
         
-        $this->assertSame($moduleCssFiles, $result);
+        $this->assertSame($expectedCssFiles, $result);
     }
 
     public function testItReturnsTheThemeDirectory()

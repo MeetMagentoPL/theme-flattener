@@ -43,7 +43,8 @@ class ThemeFileCollector implements ThemeFileCollectorInterface
             throw new UnableToLocateThemeDirectoryException($message);
         }
 
-        return $this->collectAllCssSourceFilesFromTheme($themeDirPath);
+        $collectAllCssSourceFilesFromTheme = $this->collectAllCssSourceFilesFromTheme($themeDirPath);
+        return $collectAllCssSourceFilesFromTheme;
     }
 
     /**
@@ -65,9 +66,18 @@ class ThemeFileCollector implements ThemeFileCollectorInterface
         $cssSourceFileDirectories = $this->getCssSourceFileDirectories($themeDirPath);
 
         return array_reduce($cssSourceFileDirectories, function ($carry, $sourceDirectory) {
-            $files = array_map('strval', $this->collectCssSourceFilesFromDir($sourceDirectory));
+            $files = array_map([$this, 'cutOffEverythingUpTheCurrentWorkingDirectory'], $this->collectCssSourceFilesFromDir(realpath($sourceDirectory)));
             return array_merge($carry, $files);
         }, []);
+    }
+
+    private function cutOffEverythingUpTheCurrentWorkingDirectory($filePath)
+    {
+        $cwd = getcwd();
+        $result = 0 === strpos($filePath, $cwd) ?
+            substr($filePath, strlen($cwd) + 1):
+            $filePath;
+        return $result;
     }
 
     /**
@@ -80,8 +90,8 @@ class ThemeFileCollector implements ThemeFileCollectorInterface
             new \RecursiveDirectoryIterator($sourceDirectory, \RecursiveDirectoryIterator::SKIP_DOTS)
         );
         
-        return array_filter(array_values(iterator_to_array($iterator)), function (\SplFileInfo $item) {
+        return array_map('strval', array_filter(array_values(iterator_to_array($iterator)), function (\SplFileInfo $item) {
             return $item->isFile();
-        });
+        }));
     }
 }

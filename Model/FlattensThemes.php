@@ -42,18 +42,14 @@ class FlattensThemes
      */
     public function flatten($area, $theme, $destinationDir)
     {
-        $this->themeDir = $this->themeFileCollector->getThemeDirectoryPath($area, $theme);
+        $this->themeDir = RelativeFileSystemPathBuilder::build(
+            getcwd(),
+            $this->themeFileCollector->getThemeDirectoryPath($area, $theme)
+        );
         $this->createDestinationWorkDir($destinationDir);
         foreach ($this->getThemeCssSourceFiles($area, $theme) as $cssSourceFile) {
             $this->processModuleCssSourceFiles($destinationDir, $cssSourceFile);
-
-            $inThemePart = $this->getInThemePartOfCssSourceFile($cssSourceFile);
-            if (preg_match('#^web/css/source/(.+/|)([^/]+)$#', $inThemePart, $matches)) {
-                list(, $subdirs, $file) = $matches;
-                $linkDir = $destinationDir . '/css';
-                $linkTarget = $this->createPathToLinkTarget($linkDir, $cssSourceFile);
-                symlink($linkTarget, $linkDir . '/' . $this->createLinkNameForThemeCssSourceFile($subdirs, $file));
-            }
+            $this->processThemeCssSourceFiles($destinationDir, $cssSourceFile);
             
         }
     }
@@ -150,6 +146,7 @@ class FlattensThemes
             list(, $module, $subdirs, $file) = $matches;
             $linkDir = $destinationDir . '/css';
             $linkTarget = $this->createPathToLinkTarget($linkDir, $cssSource);
+            //printf("%s --> %s\n", $linkTarget, $linkDir . '/' . $this->createLinkNameForModuleCssSourceFile($module, $subdirs, $file));
             symlink($linkTarget, $linkDir . '/' . $this->createLinkNameForModuleCssSourceFile($module, $subdirs, $file));
         }
     }
@@ -160,7 +157,9 @@ class FlattensThemes
      */
     private function getInThemePartOfCssSourceFile($cssSource)
     {
-        return substr($cssSource, strlen($this->themeDir) + 1);
+        $themeDir = $this->themeDir;
+        $result = substr($cssSource, strlen($themeDir) + 1);
+        return $result;
     }
 
     /**
@@ -170,5 +169,21 @@ class FlattensThemes
     private function removeDoubleUnderscores($str)
     {
         return str_replace('__', '_', $str);
+    }
+
+    /**
+     * @param string $destinationDir
+     * @param string $cssSourceFile
+     */
+    private function processThemeCssSourceFiles($destinationDir, $cssSourceFile)
+    {
+        $inThemePart = $this->getInThemePartOfCssSourceFile($cssSourceFile);
+        if (preg_match('#^web/css/source/(.+/|)([^/]+)$#', $inThemePart, $matches)) {
+            list(, $subdirs, $file) = $matches;
+            $linkDir = $destinationDir . '/css';
+            $linkTarget = $this->createPathToLinkTarget($linkDir, $cssSourceFile);
+            //printf("%s --> %s\n", $linkTarget, $linkDir . '/' . $this->createLinkNameForThemeCssSourceFile($subdirs, $file));
+            symlink($linkTarget, $linkDir . '/' . $this->createLinkNameForThemeCssSourceFile($subdirs, $file));
+        }
     }
 }
