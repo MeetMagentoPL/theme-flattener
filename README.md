@@ -49,7 +49,7 @@ bin/magento dev:theme:rebuild-flattened-theme
 bin/magento dev:theme:rebuild-flattened-themes
 ```
 
-### dev:theme:flatten <package_theme>
+### dev:theme:flatten &lt;package_theme&gt;
 
 ```sh
 bin/magento dev:theme:flatten <package_theme> -a="..." -d="..."
