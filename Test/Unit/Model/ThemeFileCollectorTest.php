@@ -97,4 +97,10 @@ class ThemeFileCollectorTest extends \PHPUnit_Framework_TestCase
         
         $this->assertSame($moduleCssFiles, $result);
     }
+
+    public function testItReturnsTheThemeDirectory()
+    {
+        $this->mockThemeRegistrar->method('getPath')->willReturn($this->testDir);
+        $this->assertSame($this->testDir, $this->themeFileCollector->getThemeDirectoryPath('frontend', 'Test_theme'));
+    }
 }

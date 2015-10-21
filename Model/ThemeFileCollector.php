@@ -22,14 +22,14 @@ class ThemeFileCollector implements ThemeFileCollectorInterface
     /**
      * @param string $area
      * @param string $theme
-     * @return null|string
+     * @return string
      */
-    private function getThemePath($area, $theme)
+    public function getThemeDirectoryPath($area, $theme)
     {
         $componentName = $area . '/' . str_replace('_', '/', $theme);
         return $this->themeRegistrar->getPath(ComponentRegistrar::THEME, $componentName);
     }
-    
+
     /**
      * @param string $area
      * @param string $theme
@@ -37,23 +37,13 @@ class ThemeFileCollector implements ThemeFileCollectorInterface
      */
     public function getCssSourceFiles($area, $theme)
     {
-        $themeDirPath = $this->getThemePath($area, $theme);
+        $themeDirPath = $this->getThemeDirectoryPath($area, $theme);
         if (!$themeDirPath) {
             $message = sprintf('Unable to locate the theme directory for area "%s" and theme "%s"', $area, $theme);
             throw new UnableToLocateThemeDirectoryException($message);
         }
 
         return $this->collectAllCssSourceFilesFromTheme($themeDirPath);
-    }
-
-    /**
-     * @param string $area
-     * @param string $theme
-     * @return string
-     */
-    public function getThemeDirectoryPath($area, $theme)
-    {
-        // TODO: Implement getThemeDirectoryPath() method.
     }
 
     /**
