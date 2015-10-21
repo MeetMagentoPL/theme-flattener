@@ -158,4 +158,18 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFlattenedFiles($expectedFlattenedFiles, $themeDirectory, $sourceThemeFiles);
     }
+
+    public function testItRemovesExistingLinksBeforeCreatingThem()
+    {
+        $themeDirectory = 'app/design/Test/theme';
+        $sourceThemeFiles = [
+            'web/css/source/theme.less'
+        ];
+        $this->createSourceThemeFilesFixture($themeDirectory, $sourceThemeFiles);
+
+        $existingFile = 'target/css/theme.less';
+        $this->ensureFileExists($existingFile);
+
+        $this->flattensThemes->flatten('frontend', 'Test_theme', 'target');
+    }
 }

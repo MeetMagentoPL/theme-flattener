@@ -121,23 +121,36 @@ class FlattensThemes
     private function createPathToLinkTarget($linkDir, $cssSource)
     {
         $this->ensureDirectoryExists($linkDir);
-        $relativePathToTarget = RelativeFileSystemPathBuilder::build($linkDir, $cssSource);
-        return $relativePathToTarget;
+        return RelativeFileSystemPathBuilder::build($linkDir, $cssSource);
     }
 
     /**
      * @param string $destinationDir
-     * @param string $cssSource
+     * @param string $cssSourceFile
      */
-    private function processModuleCssSourceFiles($destinationDir, $cssSource)
+    private function processModuleCssSourceFiles($destinationDir, $cssSourceFile)
     {
-        $inThemePart = $this->getInThemePartOfCssSourceFile($cssSource);
+        $inThemePart = $this->getInThemePartOfCssSourceFile($cssSourceFile);
         if (preg_match('#^([^_/]+_[^_/]+)/web/css/source/(.+/|)([^/]+)$#', $inThemePart, $matches)) {
             list(, $module, $subdirs, $file) = $matches;
-            $linkDir = $destinationDir . '/css';
-            $linkTarget = $this->createPathToLinkTarget($linkDir, $cssSource);
-            //printf("%s --> %s\n", $linkTarget, $linkDir . '/' . $this->createLinkNameForModuleCssSourceFile($module, $subdirs, $file));
-            symlink($linkTarget, $linkDir . '/' . $this->createLinkNameForModuleCssSourceFile($module, $subdirs, $file));
+            $linkName = $this->createLinkNameForModuleCssSourceFile($module, $subdirs, $file);
+
+            $this->createSymlink($destinationDir, $linkName, $cssSourceFile);
+        }
+    }
+
+    /**
+     * @param string $destinationDir
+     * @param string $cssSourceFile
+     */
+    private function processThemeCssSourceFiles($destinationDir, $cssSourceFile)
+    {
+        $inThemePart = $this->getInThemePartOfCssSourceFile($cssSourceFile);
+        if (preg_match('#^web/css/source/(.+/|)([^/]+)$#', $inThemePart, $matches)) {
+            list(, $subdirs, $file) = $matches;
+            $linkName = $this->createLinkNameForThemeCssSourceFile($subdirs, $file);
+
+            $this->createSymlink($destinationDir, $linkName, $cssSourceFile);
         }
     }
 
@@ -163,17 +176,17 @@ class FlattensThemes
 
     /**
      * @param string $destinationDir
-     * @param string $cssSourceFile
+     * @param string $linkName
+     * @param string $cssSource
      */
-    private function processThemeCssSourceFiles($destinationDir, $cssSourceFile)
+    private function createSymlink($destinationDir, $linkName, $cssSource)
     {
-        $inThemePart = $this->getInThemePartOfCssSourceFile($cssSourceFile);
-        if (preg_match('#^web/css/source/(.+/|)([^/]+)$#', $inThemePart, $matches)) {
-            list(, $subdirs, $file) = $matches;
-            $linkDir = $destinationDir . '/css';
-            $linkTarget = $this->createPathToLinkTarget($linkDir, $cssSourceFile);
-            //printf("%s --> %s\n", $linkTarget, $linkDir . '/' . $this->createLinkNameForThemeCssSourceFile($subdirs, $file));
-            symlink($linkTarget, $linkDir . '/' . $this->createLinkNameForThemeCssSourceFile($subdirs, $file));
+        $linkDir = $destinationDir . '/css';
+        $linkTarget = $this->createPathToLinkTarget($linkDir, $cssSource);
+        $linkFilePath = $linkDir . '/' . $linkName;
+        if (file_exists($linkFilePath)) {
+            unlink($linkFilePath);
         }
+        symlink($linkTarget, $linkFilePath);
     }
 }
