@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier\Util;
+namespace MeetMagentoPL\ThemeFlattener\Util;
 
 class RelativeFileSystemPathBuilder
 {

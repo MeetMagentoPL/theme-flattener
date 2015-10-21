@@ -1,12 +1,11 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier\Model;
+namespace MeetMagentoPL\ThemeFlattener\Model;
 
 
-use MeetMagentoPL\Falkowskifier\Exception\UnableToCreateDirectoryException;
-use MeetMagentoPL\Falkowskifier\Model\ThemeFileCollectorInterface;
-use MeetMagentoPL\Falkowskifier\Util\RelativeFileSystemPathBuilder;
+use MeetMagentoPL\ThemeFlattener\Exception\UnableToCreateDirectoryException;
+use MeetMagentoPL\ThemeFlattener\Util\RelativeFileSystemPathBuilder;
 
 class FlattensThemes
 {

@@ -1,11 +1,11 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier\Model;
+namespace MeetMagentoPL\ThemeFlattener\Model;
 
 use Magento\Framework\Component\ComponentRegistrar;
 use Magento\Framework\Component\ComponentRegistrarInterface;
-use MeetMagentoPL\Falkowskifier\Exception\UnableToLocateThemeDirectoryException;
+use MeetMagentoPL\ThemeFlattener\Exception\UnableToLocateThemeDirectoryException;
 
 class ThemeFileCollector implements ThemeFileCollectorInterface
 {

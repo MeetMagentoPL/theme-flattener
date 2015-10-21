@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier\Exception;
+namespace MeetMagentoPL\ThemeFlattener\Exception;
 
 class UnableToCreateDirectoryException extends FlattenThemeException
 {

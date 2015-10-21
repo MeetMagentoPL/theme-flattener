@@ -1,14 +1,14 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier\Model;
+namespace MeetMagentoPL\ThemeFlattener\Model;
 
-use MeetMagentoPL\Falkowskifier\Exception\UnableToCreateDirectoryException;
-use MeetMagentoPL\Falkowskifier\Test\Unit\FileSystemThemeFixtureTrait;
+use MeetMagentoPL\ThemeFlattener\Exception\UnableToCreateDirectoryException;
+use MeetMagentoPL\ThemeFlattener\Test\Unit\FileSystemThemeFixtureTrait;
 
 
 /**
- * @covers \MeetMagentoPL\Falkowskifier\FlattensThemes
+ * @covers \MeetMagentoPL\ThemeFlattener\FlattensThemes
  */
 class FlattensThemesTest extends \PHPUnit_Framework_TestCase
 {

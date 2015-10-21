@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier\Test\Unit;
+namespace MeetMagentoPL\ThemeFlattener\Test\Unit;
 
 trait FileSystemThemeFixtureTrait
 {

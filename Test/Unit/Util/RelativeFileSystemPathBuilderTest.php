@@ -1,9 +1,9 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier\Test\Unit\Util;
+namespace MeetMagentoPL\ThemeFlattener\Test\Unit\Util;
 
-use MeetMagentoPL\Falkowskifier\Util\RelativeFileSystemPathBuilder;
+use MeetMagentoPL\ThemeFlattener\Util\RelativeFileSystemPathBuilder;
 
 class RelativeFileSystemPathBuilderTest extends \PHPUnit_Framework_TestCase
 {

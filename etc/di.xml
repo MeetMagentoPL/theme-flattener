@@ -4,11 +4,11 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="flattenThemeCommand" xsi:type="object">MeetMagentoPL\Falkowskifier\Console\Command\FlattenThemeCommand</item>
+                <item name="flattenThemeCommand" xsi:type="object">MeetMagentoPL\ThemeFlattener\Console\Command\FlattenThemeCommand</item>
             </argument>
         </arguments>
     </type>
     
-    <preference for="\MeetMagentoPL\Falkowskifier\Model\ThemeFileCollectorInterface"
-                type="\MeetMagentoPL\Falkowskifier\Model\ThemeFileCollector"/>
+    <preference for="\MeetMagentoPL\ThemeFlattener\Model\ThemeFileCollectorInterface"
+                type="\MeetMagentoPL\ThemeFlattener\Model\ThemeFileCollector"/>
 </config>

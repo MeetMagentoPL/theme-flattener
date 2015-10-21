@@ -1,16 +1,16 @@
 <?php
 
 
-namespace MeetMagentoPL\Falkowskifier\Console\Command;
+namespace MeetMagentoPL\ThemeFlattener\Console\Command;
 
-use MeetMagentoPL\Falkowskifier\Exception\FlattenThemeException;
-use MeetMagentoPL\Falkowskifier\Model\FlattensThemes;
+use MeetMagentoPL\ThemeFlattener\Exception\FlattenThemeException;
+use MeetMagentoPL\ThemeFlattener\Model\FlattensThemes;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * @covers \MeetMagentoPL\Falkowskifier\Console\Command\FlattenThemeCommand
+ * @covers \MeetMagentoPL\ThemeFlattener\Console\Command\FlattenThemeCommand
  */
 class FlattenThemeCommandTest extends \PHPUnit_Framework_TestCase
 {
