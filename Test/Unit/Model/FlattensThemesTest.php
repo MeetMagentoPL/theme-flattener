@@ -115,13 +115,6 @@ class FlattensThemesTest extends \PHPUnit_Framework_TestCase
         $this->flattensThemes->flatten('frontend', 'Test_theme', 'destination-dir');
     }
 
-    public function testItCreatesTheCorrectDefaultDestinationDirectory()
-    {
-        $expectedDestinationDirectory = 'xx/test-theme-flat';
-        $this->flattensThemes->flattenToDefaultDestination('frontend', 'Test_theme');
-        $this->assertTrue(is_dir($expectedDestinationDirectory), 'The default destination directory was not created');
-    }
-
     public function testItFlattensAModuleLessFile()
     {
         $themeDirectory = 'app/design/Test/theme';

@@ -28,16 +28,6 @@ class FlattensThemes
     /**
      * @param string $area
      * @param string $theme
-     */
-    public function flattenToDefaultDestination($area, $theme)
-    {
-        $defaultDestinationDir = 'xx/' . strtolower(str_replace('_', '-', $theme)) . '-flat';
-        $this->flatten($area, $theme, $defaultDestinationDir);
-    }
-
-    /**
-     * @param string $area
-     * @param string $theme
      * @param string $destinationDir
      */
     public function flatten($area, $theme, $destinationDir)

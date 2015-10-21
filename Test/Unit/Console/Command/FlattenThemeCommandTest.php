@@ -97,7 +97,7 @@ class FlattenThemeCommandTest extends \PHPUnit_Framework_TestCase
         $expectedMessage = 'Dummy Message';
         $this->mockOutput->expects($this->once())->method('writeln')->with('<error>' . $expectedMessage . '</error>');
 
-        $this->mockFlattensThemes->method('flattenToDefaultDestination')
+        $this->mockFlattensThemes->method('flatten')
             ->willThrowException(new FlattenThemeException($expectedMessage));
         
         $this->command->run($this->mockInput, $this->mockOutput);
@@ -112,6 +112,18 @@ class FlattenThemeCommandTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->mockOutput->expects($this->once())->method('writeln')
             ->with('<comment>Frontend theme Test_theme flattened into directory destination-dir</comment>');
+        $this->command->run($this->mockInput, $this->mockOutput);
+    }
+
+    public function testItDisplaysAConfirmationMessageWithTheDefaultDestinationDirectory()
+    {
+        $this->mockInput->method('getArgument')->with('theme')->willReturn('Test_theme');
+        $this->mockInput->method('getOption')->willReturnMap([
+            ['dest', null],
+            ['area', 'frontend']
+        ]);
+        $this->mockOutput->expects($this->once())->method('writeln')
+            ->with('<comment>Frontend theme Test_theme flattened into directory xx/test-theme-flat</comment>');
         $this->command->run($this->mockInput, $this->mockOutput);
     }
 
@@ -133,7 +145,8 @@ class FlattenThemeCommandTest extends \PHPUnit_Framework_TestCase
             ['dest', null],
             ['area', 'frontend']
         ]);
-        $this->mockFlattensThemes->expects($this->once())->method('flattenToDefaultDestination');
+        $this->mockFlattensThemes->expects($this->once())->method('flatten')
+            ->with('frontend', 'Test_theme', 'xx/test-theme-flat');
         $this->command->run($this->mockInput, $this->mockOutput);
     }
 }

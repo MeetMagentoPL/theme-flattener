@@ -48,16 +48,23 @@ class FlattenThemeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            list($area, $theme, $destinationDir) = $this->getInputArguments($input);
+            list($area, $theme, $destination) = $this->getInputArguments($input);
             
-            $destinationDir ?
-                $this->flattensThemes->flatten($area, $theme, $destinationDir) :
-                $this->flattensThemes->flattenToDefaultDestination($area, $theme);
+            $destinationDir  = $destination ?
+                $destination :
+                $this->getDefaultDestinationPath($theme);
+
+            $this->flattensThemes->flatten($area, $theme, $destinationDir);
             
             $this->displayConfirmationMessage($output, $area, $theme, $destinationDir);
         } catch (FlattenThemeException $exception) {
             $output->writeln('<error>' . $exception->getMessage() . '</error>');
         }
+    }
+
+    private function getDefaultDestinationPath($theme)
+    {
+        return 'xx/' . strtolower(str_replace('_', '-', $theme)) . '-flat';
     }
 
     /**
