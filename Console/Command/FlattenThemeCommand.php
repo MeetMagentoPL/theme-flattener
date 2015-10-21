@@ -4,7 +4,7 @@
 namespace MeetMagentoPL\Falkowskifier\Console\Command;
 
 use MeetMagentoPL\Falkowskifier\Exception\FlattenThemeException;
-use MeetMagentoPL\Falkowskifier\FlattensThemes;
+use MeetMagentoPL\Falkowskifier\Model\FlattensThemes;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
